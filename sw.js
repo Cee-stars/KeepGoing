@@ -4,7 +4,7 @@
    取れなかったときだけキャッシュを返す。
    こうしないとデプロイしても古い画面が出続ける。
    ============================================================= */
-const CACHE = 'keepgoing-v2';
+const CACHE = 'keepgoing-v3';
 const ASSETS = [
   './', './index.html',
   './css/tokens.css', './css/styles.css', './css/listening.css', './css/playlists.css',
@@ -39,8 +39,14 @@ self.addEventListener('fetch', e => {
   try { url = new URL(req.url); } catch (err) { return; }
   if (url.origin !== self.location.origin) return;
 
+  // ブラウザの HTTP キャッシュを飛ばして必ずサーバーに聞く。
+  // （navigate リクエストでは Request を作り直せないことがあるので素の fetch に戻す）
+  let fresh;
+  try { fresh = fetch(req, { cache: 'reload' }); }
+  catch (err) { fresh = fetch(req); }
+
   e.respondWith(
-    fetch(req)
+    fresh
       .then(res => {
         // 取れたら控えを更新しておく（オフライン用）
         if (res && res.ok) {

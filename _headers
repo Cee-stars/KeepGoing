@@ -14,14 +14,16 @@
 /manifest.webmanifest
   Cache-Control: no-cache
 
+# 単語データとコードは毎回サーバーに確認する（更新がすぐ出るように）。
+# 中身が変わっていなければ 304 が返るだけなので転送量はほぼ増えない。
 /css/*
-  Cache-Control: public, max-age=600
+  Cache-Control: no-cache
 
 /js/*
-  Cache-Control: public, max-age=600
+  Cache-Control: no-cache
 
 /data/*
-  Cache-Control: public, max-age=600
+  Cache-Control: no-cache
 
 /assets/*
   Cache-Control: public, max-age=86400

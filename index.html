@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#eef1f7" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>KeepGoing 単語帳</title>
+<link rel="stylesheet" href="css/tokens.css" />
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/listening.css" />
+<link rel="manifest" href="manifest.webmanifest" />
+</head>
+<body>
+
+<header class="app-bar" id="app-bar">
+  <h1 class="app-bar__title">KeepGoing</h1>
+  <nav class="tabs" role="tablist" aria-label="モード切替">
+    <button class="tab is-active" type="button" role="tab" data-view="study" aria-selected="true">単語帳</button>
+    <button class="tab" type="button" role="tab" data-view="listening" aria-selected="false">リスニング</button>
+  </nav>
+</header>
+
+<main class="app-main">
+
+  <!-- ===================== 単語帳ビュー (js/app.js) ===================== -->
+  <section class="view view--study is-active" id="view-study" role="tabpanel">
+    <div class="study-toolbar">
+      <input type="search" class="study-search" id="study-search"
+             placeholder="単語・意味・例文で検索" autocomplete="off" />
+      <span class="study-count" id="study-count"></span>
+    </div>
+    <div class="word-list" id="word-list"></div>
+    <p class="study-empty" id="study-empty" hidden>該当する単語がありません</p>
+  </section>
+
+  <!-- ===================== リスニングビュー (js/listening.js) ===================== -->
+  <section class="view view--listening" id="view-listening" role="tabpanel" hidden>
+    <div class="lsn" id="lsn-root"></div>
+  </section>
+
+</main>
+
+<!-- ===================== ミニプレイヤー (js/listening.js) ===================== -->
+<div class="mini-player" id="mini-player" hidden></div>
+
+<!-- =========================================================================
+     カードのマークアップ契約。app.js はこれを clone して値を流し込む。
+     styles.css はここにあるクラス名だけを前提にスタイルを当てる。
+     ========================================================================= -->
+<template id="tpl-word-card">
+  <article class="word-card" data-id="">
+    <div class="word-card__head">
+      <span class="word-card__rail" aria-hidden="true"></span>
+      <div class="word-icon" aria-hidden="true">
+        <svg class="word-icon__svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="word-icon__curve"
+                d="M6 48 C18 48 18 18 32 18 C46 18 46 48 58 48"
+                stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <span class="word-no"></span>
+      <div class="word-head__text">
+        <p class="word-ipa"></p>
+        <h2 class="word-term"></h2>
+        <p class="word-meaning"></p>
+      </div>
+    </div>
+
+    <div class="example-label">
+      <span class="example-label__badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 5v12m0 0 5-5m-5 5-5-5" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="example-label__text">example</span>
+      <span class="example-label__line" aria-hidden="true"></span>
+    </div>
+
+    <div class="example-list"></div>
+  </article>
+</template>
+
+<template id="tpl-example">
+  <div class="example">
+    <p class="example__en"></p>
+    <p class="example__ja"></p>
+  </div>
+</template>
+
+<script src="data/words.js"></script>
+<script src="js/app.js"></script>
+<script src="js/listening.js"></script>
+
+<script>
+/* オフライン対応（http(s) 配信時のみ。file:// では何もしない） */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

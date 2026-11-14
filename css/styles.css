@@ -1,0 +1,526 @@
+/* =============================================================
+   KeepGoing — styles.css （担当：A デザイナー）
+   写真の見た目を再現するレイアウト／タイポグラフィ。
+   色は必ず css/tokens.css の var() を使い、直書きしない。
+   ============================================================= */
+
+/* -------------------------------------------------------------
+   1. リセット
+   ------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body,
+h1, h2, h3, h4, p, figure, blockquote, dl, dd {
+  margin: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* mark の既定の黄色背景を必ず打ち消す */
+mark {
+  background: transparent;
+  background-color: transparent;
+  color: inherit;
+}
+
+/* ビュー切替が確実に効くように */
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* -------------------------------------------------------------
+   2. ベース
+   ------------------------------------------------------------- */
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-en);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100svh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+
+:lang(ja),
+.word-meaning,
+.example__ja,
+.study-empty {
+  font-family: var(--font-ja);
+}
+
+/* -------------------------------------------------------------
+   3. アプリバー（上部固定）
+   ------------------------------------------------------------- */
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px var(--pad-page) 10px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.app-bar__title {
+  font-size: clamp(16px, 4.4vw, 18px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* --- タブ --- */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  background: var(--bg);
+  border-radius: var(--r-pill);
+}
+
+.tab {
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  font-size: clamp(12px, 3.4vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+.tab:hover {
+  color: var(--ink-2);
+}
+
+.tab.is-active,
+.tab[aria-selected="true"] {
+  color: var(--blue-strong);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(21, 33, 56, .12);
+}
+
+/* -------------------------------------------------------------
+   4. メイン／ビュー
+   ------------------------------------------------------------- */
+.app-main {
+  padding-bottom: calc(28px + var(--safe-bottom));
+}
+
+.view {
+  display: block;
+}
+
+.view--study {
+  padding: 14px var(--pad-page) 0;
+}
+
+/* -------------------------------------------------------------
+   5. 検索ツールバー
+   ------------------------------------------------------------- */
+.study-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.study-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 10px 14px;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
+  box-shadow: 0 1px 2px rgba(21, 33, 56, .05);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.study-search::placeholder {
+  color: var(--muted);
+}
+
+.study-search:focus {
+  outline: none;
+  border-color: var(--card-border);
+  box-shadow: 0 0 0 3px var(--blue-weak);
+}
+
+.study-search:focus-visible {
+  outline: none;
+}
+
+.study-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.study-count {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.study-empty {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* -------------------------------------------------------------
+   6. 単語リスト（縦 1 カラム）
+   ------------------------------------------------------------- */
+.word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+/* -------------------------------------------------------------
+   7. 単語カード
+   ------------------------------------------------------------- */
+.word-card {
+  --icon-size: clamp(56px, 15.5vw, 68px);
+  position: relative;
+  scroll-margin-top: 78px;
+  border-radius: var(--r-card);
+}
+
+/* --- カード上部：rail → アイコン → 番号 → テキスト群 --- */
+.word-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* 左端の細い縦のグレー線 */
+.word-card__rail {
+  flex: 0 0 auto;
+  width: 3px;
+  height: var(--icon-size);
+  margin-right: 2px;
+  border-radius: var(--r-pill);
+  background: var(--rule);
+  transition: background-color .25s ease;
+}
+
+/* --- グレーの角丸四角アイコン --- */
+.word-icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  border-radius: var(--r-icon);
+  background: linear-gradient(160deg, var(--icon-bg-from) 0%, var(--icon-bg-to) 100%);
+  box-shadow:
+    0 2px 6px rgba(21, 33, 56, .20),
+    inset 0 1px 0 rgba(255, 255, 255, .14);
+  overflow: hidden;
+}
+
+/* 上部の小さな横棒のノッチ（写真どおり右寄り） */
+.word-icon::before {
+  content: "";
+  position: absolute;
+  top: 11%;
+  right: 13%;
+  width: 22%;
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--icon-notch);
+}
+
+.word-icon__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* オレンジの山型カーブ */
+.word-icon__curve {
+  stroke: var(--icon-line);
+  stroke-width: 3.4;
+  fill: none;
+}
+
+/* --- 番号バッジ（完全な正円・白文字・丸いグレー背景） --- */
+.word-no {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--badge-bg);
+  color: var(--badge-ink);
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* --- テキスト群 --- */
+.word-head__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.word-ipa {
+  font-family: var(--font-ipa);
+  font-size: clamp(13px, 3.8vw, var(--fs-ipa));
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--ipa);
+  letter-spacing: 0.01em;
+}
+
+.word-term {
+  margin-top: 1px;
+  font-family: var(--font-en);
+  font-size: clamp(26px, 8.4vw, var(--fs-term));
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--blue);
+}
+
+.word-meaning {
+  margin-top: 3px;
+  font-size: clamp(19px, 6.2vw, var(--fs-meaning));
+  font-weight: 700;
+  line-height: 1.26;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* -------------------------------------------------------------
+   8. example ラベル（↓ 丸アイコン + テキスト + 横罫線）
+   ------------------------------------------------------------- */
+.example-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 20px 0 11px;
+}
+
+.example-label__badge {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.example-label__badge svg {
+  width: 15px;
+  height: 15px;
+  stroke: var(--surface);
+  fill: none;
+}
+
+.example-label__text {
+  flex: 0 0 auto;
+  font-family: var(--font-en);
+  font-size: clamp(15px, 4.6vw, 18px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+}
+
+.example-label__line {
+  flex: 1 1 auto;
+  height: 1px;
+  min-width: 0;
+  background: var(--rule);
+}
+
+/* -------------------------------------------------------------
+   9. 例文カード
+   ------------------------------------------------------------- */
+.example-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.example {
+  padding: 13px 15px 14px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--r-card);
+}
+
+.example__en {
+  font-family: var(--font-en);
+  font-size: clamp(16px, 4.9vw, var(--fs-example));
+  font-weight: 700;
+  line-height: 1.38;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+/* 英文と和訳のあいだは点線の区切り */
+.example__ja {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule-dotted);
+  font-size: clamp(15px, 4.4vw, var(--fs-example-ja));
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* 英文だけで和訳が無い場合は区切り線を出さない */
+.example__ja:empty {
+  display: none;
+}
+
+/* --- ハイライト（背景なし・青文字・太字） --- */
+.example__en .hl,
+.example__ja .hl,
+mark.hl {
+  background: transparent;
+  background-color: transparent;
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.example__ja .hl {
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------
+   10. 状態（app.js / listening.js が付けるクラス）
+   ------------------------------------------------------------- */
+
+/* scrollToWord の一瞬のハイライト */
+@keyframes word-flash {
+  0%   { background-color: var(--blue-weak); box-shadow: 0 0 0 10px var(--blue-weak); }
+  70%  { background-color: var(--blue-weak); box-shadow: 0 0 0 10px var(--blue-weak); }
+  100% { background-color: transparent;      box-shadow: 0 0 0 10px transparent; }
+}
+
+.word-card.is-flash {
+  animation: word-flash 1.2s ease-out 1;
+}
+
+/* 再生中の単語（控えめな強調：rail が青くなる） */
+.word-card.is-speaking .word-card__rail {
+  background: var(--blue);
+  width: 4px;
+}
+
+.word-card.is-speaking .word-no {
+  background: var(--blue);
+}
+
+/* -------------------------------------------------------------
+   11. レスポンシブ
+   ------------------------------------------------------------- */
+@media (min-width: 700px) {
+  .word-list,
+  .study-toolbar,
+  .study-empty {
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  .word-card {
+    --icon-size: 68px;
+  }
+
+  .view--study {
+    padding-top: 22px;
+  }
+}
+
+/* -------------------------------------------------------------
+   12. アクセシビリティ
+   ------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .word-card.is-flash {
+    animation: none;
+    background-color: var(--blue-weak);
+  }
+}

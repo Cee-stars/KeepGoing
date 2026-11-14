@@ -1,0 +1,64 @@
+/* =============================================================
+   KeepGoing — デザイントークン（写真の配色をそのまま再現）
+   この値は 3 人の共通言語。個別 CSS で色を直書きせず必ず var() を使う。
+   ============================================================= */
+:root {
+  /* --- 背景・面 ------------------------------------------------ */
+  --bg:            #eef1f7;  /* アプリ全体の背景（写真の薄い青みグレー） */
+  --surface:       #ffffff;  /* ヘッダーなどの面 */
+  --card-bg:       #f8fafd;  /* example カードの中身 */
+  --card-border:   #bcd2f3;  /* example カードの薄い青枠 */
+
+  /* --- 文字 ---------------------------------------------------- */
+  --ink:           #15171c;  /* 日本語訳・例文の黒 */
+  --ink-2:         #2b3038;  /* 本文のやや薄い黒 */
+  --ipa:           #23262c;  /* 発音記号 */
+  --muted:         #9aa3b2;  /* "example" ラベルのグレー */
+  --rule:          #d6dce7;  /* 区切り線 */
+  --rule-dotted:   #c3cbd8;  /* 例文の点線 */
+
+  /* --- アクセント（写真の青） ----------------------------------- */
+  --blue:          #3b78f0;  /* 見出し語・ハイライト */
+  --blue-strong:   #2f66d8;
+  --blue-weak:     #e8f0fe;
+
+  /* --- アイコン（グレー角丸 × オレンジの曲線） ------------------- */
+  --icon-bg-from:  #626d82;
+  --icon-bg-to:    #4d5768;
+  --icon-line:     #e4673c;  /* オレンジの波線 */
+  --icon-notch:    #aab2c0;  /* 上部の小さな横棒 */
+
+  /* --- 番号バッジ（白文字 × 丸いグレー） ------------------------ */
+  --badge-bg:      #8d96a6;
+  --badge-ink:     #ffffff;
+
+  /* --- リスニング用 -------------------------------------------- */
+  --player-bg:     #ffffff;
+  --player-shadow: 0 -6px 24px rgba(21, 33, 56, .10);
+  --accent-soft:   #eaf1ff;
+
+  /* --- 形 ------------------------------------------------------ */
+  --r-card:        14px;
+  --r-icon:        14px;
+  --r-pill:        999px;
+
+  /* --- 余白 ---------------------------------------------------- */
+  --gap:           16px;
+  --pad-page:      18px;
+
+  /* --- 文字サイズ（写真の比率） --------------------------------- */
+  --fs-term:       34px;
+  --fs-meaning:    25px;
+  --fs-ipa:        15px;
+  --fs-example:    19px;
+  --fs-example-ja: 17px;
+
+  /* --- フォント ------------------------------------------------- */
+  --font-en: "Helvetica Neue", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-ja: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+             "Yu Gothic", system-ui, sans-serif;
+  --font-ipa: "Charis SIL", "Doulos SIL", "Gentium Plus", "Segoe UI",
+              "Lucida Sans Unicode", system-ui, sans-serif;
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

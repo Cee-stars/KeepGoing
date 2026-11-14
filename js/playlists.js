@@ -17,18 +17,15 @@
      1 度だけ自動で追加され、あとは普通のリストと同じ（消したら復活しない）。 */
   var SEEDS = [
     {
-      id: 'conv',
-      name: '会話によく出る',
-      ids: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-            41, 42, 43, 44, 45, 46, 47]
-    },
-    {
       id: 'reading',
       name: 'リーディング',
       ids: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47]
     }
   ];
+
+  /* 配布をやめたプレイリスト。保存ずみでも次に開いたときに消える。 */
+  var RETIRED = ['conv'];
 
   function seedCopies() {
     var out = [];
@@ -84,6 +81,14 @@
       }
       if (out.length) S.lists = out;
     }
+    // 配布をやめたリストを取り除く
+    var kept = [];
+    for (var r = 0; r < S.lists.length; r++) {
+      if (!hasStr(RETIRED, S.lists[r].id)) kept.push(S.lists[r]);
+    }
+    var removed = kept.length !== S.lists.length;
+    S.lists = kept;
+
     // お気に入りは必ず残しておく
     if (!findList(FAV_ID)) S.lists.unshift({ id: FAV_ID, name: 'お気に入り', ids: [] });
 
@@ -103,7 +108,13 @@
     }
 
     if (typeof o.active === 'string') S.active = o.active;
-    if (added) save();
+
+    // 選択中のリストが無くなっていたら「すべて」に戻す
+    if (String(S.active).indexOf('pl:') === 0 && !findList(String(S.active).slice(3))) {
+      S.active = 'all';
+    }
+
+    if (added || removed) save();
   }
 
   function save() {

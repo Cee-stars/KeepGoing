@@ -4,11 +4,15 @@
    取れなかったときだけキャッシュを返す。
    こうしないとデプロイしても古い画面が出続ける。
    ============================================================= */
-const CACHE = 'keepgoing-v3';
+const CACHE = 'keepgoing-v4';
+// index.html と同じ ?v= を付ける。付けないと別URL扱いで二重に持つことになる。
+const V = '?v=4';
 const ASSETS = [
   './', './index.html',
-  './css/tokens.css', './css/styles.css', './css/listening.css', './css/playlists.css',
-  './data/words.js', './js/app.js', './js/listening.js', './js/playlists.js',
+  './css/tokens.css' + V, './css/styles.css' + V,
+  './css/listening.css' + V, './css/playlists.css' + V,
+  './data/words.js' + V, './js/app.js' + V,
+  './js/listening.js' + V, './js/playlists.js' + V,
   './manifest.webmanifest',
   './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png'
 ];

@@ -82,6 +82,7 @@ Spotify のように聞き流せるリスニングモードが入っています
 | `js/playlists.js` / `css/playlists.css` | プレイリスト・先頭へ戻る・`window.Playlists` |
 | `js/listening.js` | 再生エンジン・範囲選択・Media Session・`window.Listening` |
 | `sw.js` / `manifest.webmanifest` | オフライン対応とホーム画面追加 |
+| `_headers` | Cloudflare Pages 用のキャッシュ設定 |
 | `tools/check.js` | Playwright による統合チェック |
 | `docs/CONTRACT.md` | 実装契約（データ形式・API） |
 
@@ -97,3 +98,17 @@ node tools/check.js
 ```bash
 python3 -m http.server 8000
 ```
+
+## 公開（Cloudflare Pages）
+
+静的ファイルだけなのでビルドは不要です。Cloudflare Pages の設定はこれだけです。
+
+| 項目 | 値 |
+|---|---|
+| Framework preset | `None` |
+| Build command | （空のまま） |
+| Build output directory | `/` |
+| Production branch | `main` |
+
+`main` に push するたびに自動でデプロイされます。
+`_headers` で HTML と `sw.js` を `no-cache` にしているので、更新はすぐ反映されます。

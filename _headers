@@ -1,0 +1,27 @@
+# Cloudflare Pages / Netlify 用のヘッダー設定
+# HTML と Service Worker は毎回確認させ、中身のあるファイルだけキャッシュする。
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/sw.js
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+/css/*
+  Cache-Control: public, max-age=600
+
+/js/*
+  Cache-Control: public, max-age=600
+
+/data/*
+  Cache-Control: public, max-age=600
+
+/assets/*
+  Cache-Control: public, max-age=86400

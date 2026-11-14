@@ -13,12 +13,43 @@
   var AUTO_SIZE = 10;        // 自動セット 1 つあたりの語数
   var FAV_ID = 'fav';        // 最初から用意しておくリスト
 
+  /* 最初から入れておくプレイリスト。
+     1 度だけ自動で追加され、あとは普通のリストと同じ（消したら復活しない）。 */
+  var SEEDS = [
+    {
+      id: 'conv',
+      name: '会話によく出る',
+      ids: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 42, 43, 44, 45, 46, 47]
+    }
+  ];
+
+  function seedCopies() {
+    var out = [];
+    for (var i = 0; i < SEEDS.length; i++) {
+      out.push({ id: SEEDS[i].id, name: SEEDS[i].name, ids: SEEDS[i].ids.slice() });
+    }
+    return out;
+  }
+
+  function seedKeys() {
+    var out = [];
+    for (var i = 0; i < SEEDS.length; i++) out.push(SEEDS[i].id);
+    return out;
+  }
+
+  function hasStr(arr, v) {
+    for (var i = 0; i < arr.length; i++) if (arr[i] === v) return true;
+    return false;
+  }
+
   /* ======================================================================
      1. 保存データ
      ====================================================================== */
   function defaults() {
     return {
-      lists: [{ id: FAV_ID, name: 'お気に入り', ids: [] }],
+      lists: [{ id: FAV_ID, name: 'お気に入り', ids: [] }].concat(seedCopies()),
+      seeded: seedKeys(),    // 自動追加ずみの既定リスト（消しても戻さないための印）
       active: 'all'          // 'all' | 'auto:<from>-<to>' | 'pl:<id>'
     };
   }
@@ -49,7 +80,24 @@
     }
     // お気に入りは必ず残しておく
     if (!findList(FAV_ID)) S.lists.unshift({ id: FAV_ID, name: 'お気に入り', ids: [] });
+
+    // まだ一度も追加していない既定リストだけを入れる（ユーザーが消したものは戻さない）
+    S.seeded = [];
+    if (isArray(o.seeded)) {
+      for (var j = 0; j < o.seeded.length; j++) S.seeded.push(String(o.seeded[j]));
+    }
+    var added = false;
+    for (var k = 0; k < SEEDS.length; k++) {
+      if (hasStr(S.seeded, SEEDS[k].id)) continue;
+      if (!findList(SEEDS[k].id)) {
+        S.lists.push({ id: SEEDS[k].id, name: SEEDS[k].name, ids: SEEDS[k].ids.slice() });
+      }
+      S.seeded.push(SEEDS[k].id);
+      added = true;
+    }
+
     if (typeof o.active === 'string') S.active = o.active;
+    if (added) save();
   }
 
   function save() {

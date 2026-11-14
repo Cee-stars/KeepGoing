@@ -38,18 +38,18 @@ const ok = (name, cond, note = '') => results.push({ name, pass: !!cond, note })
       first: w[0] ? { term: w[0].term, ipa: w[0].ipa, meaning: w[0].meaning } : null
     };
   });
-  ok('単語データが30件', data.count === 30, `count=${data.count}`);
-  ok('idが1..30の連番', data.idsSequential);
+  ok('単語データが47件', data.count === 47, `count=${data.count}`);
+  ok('idが1..47の連番', data.idsSequential);
   ok('必須フィールドが揃っている', data.hasFields);
   ok('ハイライト文字列が例文に実在する', data.markOk);
   ok('1語目が写真どおり better off', data.first && data.first.term === 'better off',
      JSON.stringify(data.first));
 
   // --- 描画 ---------------------------------------------------------------
-  ok('カードが30枚描画された', await page.locator('.word-card').count() === 30);
+  ok('カードが47枚描画された', await page.locator('.word-card').count() === 47);
   ok('番号バッジに値が入っている', (await page.locator('.word-card').first().locator('.word-no').textContent()).trim() === '1');
   ok('ハイライト<mark>が存在する', await page.locator('.word-card mark').count() > 0);
-  ok('例文が描画されている', await page.locator('.example').count() >= 30);
+  ok('例文が描画されている', await page.locator('.example').count() >= 47);
 
   // --- スタイルが当たっているか（デザイナー担当分） -------------------------
   const style = await page.evaluate(() => {

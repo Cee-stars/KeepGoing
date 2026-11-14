@@ -13,6 +13,7 @@
   var readyQueue = [];    // onReady で積まれたコールバック
   var searchTimer = null;
   var currentQuery = '';
+  var playlistIds = null;   // null = すべて表示 / 配列 = その id だけ表示
   var flashTimer = null;
 
   var els = {};
@@ -156,9 +157,17 @@
     currentQuery = q;
     var shown = 0;
 
+    // プレイリストの id を引きやすいように集合化する
+    var inList = null;
+    if (playlistIds) {
+      inList = {};
+      for (var k = 0; k < playlistIds.length; k++) inList[playlistIds[k]] = true;
+    }
+
     for (var i = 0; i < cardIndex.length; i++) {
       var item = cardIndex[i];
-      var hit = !q || item.haystack.indexOf(q) !== -1;
+      var hit = (!inList || inList[item.id] === true) &&
+                (!q || item.haystack.indexOf(q) !== -1);
       if (hit) {
         item.el.hidden = false;
         shown++;
@@ -168,11 +177,18 @@
     }
 
     if (els.count) {
-      els.count.textContent = q
+      els.count.textContent = (q || playlistIds)
         ? shown + ' / ' + cardIndex.length + '語'
         : cardIndex.length + '語';
     }
     if (els.empty) els.empty.hidden = shown !== 0;
+  }
+
+  /* プレイリストによる絞り込み（playlists.js から呼ばれる）
+     ids に配列を渡すとその単語だけ、null を渡すとすべて表示する */
+  function setPlaylistFilter(ids) {
+    playlistIds = (Object.prototype.toString.call(ids) === '[object Array]') ? ids.slice() : null;
+    applyFilter(els.search ? els.search.value : '');
   }
 
   function onSearchInput() {
@@ -240,6 +256,15 @@
 
     var card = findCard(id);
     if (!card) return false;
+
+    // プレイリストで絞り込み中に、その外の単語へ飛ぶ場合は「すべて」に戻す
+    if (card.hidden) {
+      if (window.Playlists && typeof window.Playlists.setActive === 'function') {
+        window.Playlists.setActive('all');
+      } else {
+        setPlaylistFilter(null);
+      }
+    }
 
     // sticky なヘッダーに隠れないよう余白を確保する
     var bar = document.getElementById('app-bar');
@@ -310,6 +335,8 @@
     },
     scrollToWord: scrollToWord,
     showView: showView,
+    setPlaylistFilter: setPlaylistFilter,
+    cardFor: findCard,
     onReady: function (fn) {
       if (typeof fn !== 'function') return;
       if (ready) fn();

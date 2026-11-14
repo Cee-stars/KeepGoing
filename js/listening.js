@@ -1393,6 +1393,22 @@
   window.Listening = {
     playFrom: function (id) { play(id); },
     stop: function () { stop(); },
-    isPlaying: function () { return !!(P.active && !P.paused); }
+    isPlaying: function () { return !!(P.active && !P.paused); },
+
+    /* プレイリストを再生対象にする（playlists.js から呼ばれる）。
+       ids: 再生したい単語 id の配列 / autoplay: true ならそのまま再生開始 */
+    setSelection: function (ids, autoplay) {
+      if (Object.prototype.toString.call(ids) !== '[object Array]') return;
+      var clean = [], seen = {}, i, n;
+      for (i = 0; i < ids.length; i++) {
+        n = toInt(ids[i], 0);
+        if (n > 0 && !seen[n]) { seen[n] = true; clean.push(n); }
+      }
+      if (!clean.length) return;
+      S.mode = 'pick';
+      S.picked = clean;
+      afterSelectionChange(false);
+      if (autoplay) play(clean[0]);
+    }
   };
 })();

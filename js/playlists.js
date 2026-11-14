@@ -2,7 +2,6 @@
    KeepGoing — プレイリスト
      ・単語帳を「すべて / 10語ずつの自動セット / 自分で作ったリスト」で絞り込む
      ・カードの ＋ ボタンから好きなリストに入れる
-     ・プレイリストをそのままリスニングで再生できる
      ・先頭へ戻るボタン
    公開するグローバルは window.Playlists だけ。保存先は localStorage。
    ========================================================================== */
@@ -374,12 +373,6 @@
       var info = el('span', 'pl-actions__name', activeName() + '・' + ids.length + '語');
       act.appendChild(info);
 
-      var bPlay = el('button', 'pl-act pl-act--play');
-      bPlay.type = 'button';
-      bPlay.textContent = 'これを聞く';
-      bPlay.addEventListener('click', function () { playActive(); });
-      act.appendChild(bPlay);
-
       if (S.active.indexOf('pl:') === 0) {
         var bEdit = el('button', 'pl-act');
         bEdit.type = 'button';
@@ -401,16 +394,6 @@
       }
       els.bar.appendChild(act);
     }
-  }
-
-  /* プレイリストをリスニングで再生する */
-  function playActive() {
-    var ids = activeIds();
-    if (!ids || !ids.length) return;
-    if (!window.Listening || typeof window.Listening.setSelection !== 'function') return;
-    if (window.App && typeof window.App.showView === 'function') window.App.showView('listening');
-    try { window.scrollTo(0, 0); } catch (e) {}
-    window.Listening.setSelection(ids, true);
   }
 
   /* ======================================================================

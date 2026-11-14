@@ -84,19 +84,13 @@ const ok = (name, cond, note = '') => results.push({ name, pass: !!cond, note })
   await page.fill('#study-search', '');
   await page.waitForTimeout(350);
 
-  // --- リスニング ----------------------------------------------------------
-  await page.click('.tab[data-view="listening"]');
-  await page.waitForTimeout(500);
-  ok('リスニングビューが表示される', await page.locator('#view-listening').isVisible());
-  ok('リスニングUIが描画されている', (await page.locator('#lsn-root').innerHTML()).length > 200);
-  ok('リスニングのJS APIが公開されている',
-     await page.evaluate(() => !!(window.Listening && typeof window.Listening.playFrom === 'function')));
+  // --- 残っていてはいけないもの --------------------------------------------
+  ok('リスニングのUIが残っていない',
+     await page.locator('#view-listening, #lsn-root, #mini-player, .tab[data-view="listening"]').count() === 0);
+  ok('リスニングのJSが残っていない', await page.evaluate(() => !window.Listening));
   ok('単語帳のJS APIが公開されている',
      await page.evaluate(() => !!(window.App && typeof window.App.scrollToWord === 'function')));
 
-  await page.screenshot({ path: '/tmp/check-listening.png', fullPage: false });
-  await page.click('.tab[data-view="study"]');
-  await page.waitForTimeout(400);
   await page.screenshot({ path: '/tmp/check-study.png', fullPage: false });
 
   // --- エラー --------------------------------------------------------------
@@ -112,6 +106,6 @@ const ok = (name, cond, note = '') => results.push({ name, pass: !!cond, note })
     console.log(`${r.pass ? 'PASS' : 'FAIL'}  ${r.name}${r.note ? '   -- ' + r.note : ''}`);
   }
   console.log(`\n${results.length - bad}/${results.length} passed`);
-  console.log('screenshots: /tmp/check-study.png  /tmp/check-listening.png');
+  console.log('screenshot: /tmp/check-study.png');
   process.exit(bad ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

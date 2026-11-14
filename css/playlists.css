@@ -196,11 +196,6 @@
 .to-top svg { width: 22px; height: 22px; stroke: currentColor; }
 .to-top[hidden] { display: none; }
 
-/* ミニプレイヤーが出ている間は、その上に逃がす */
-body:has(#mini-player:not([hidden])) .to-top {
-  bottom: calc(92px + var(--safe-bottom));
-}
-
 /* -------------------------------------------------------------
    5. モーダル
    ------------------------------------------------------------- */

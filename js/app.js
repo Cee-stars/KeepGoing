@@ -211,7 +211,7 @@
   function showView(name) {
     var views = document.querySelectorAll('.view');
     var tabs = document.querySelectorAll('.tab[data-view]');
-    var target = name === 'listening' ? 'listening' : 'study';
+    var target = 'study';          // ビューは単語帳だけ
 
     for (var i = 0; i < views.length; i++) {
       var v = views[i];

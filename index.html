@@ -6,26 +6,21 @@
 <meta name="theme-color" content="#eef1f7" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <title>KeepGoing 単語帳</title>
-<link rel="stylesheet" href="css/tokens.css?v=6" />
-<link rel="stylesheet" href="css/styles.css?v=6" />
-<link rel="stylesheet" href="css/listening.css?v=6" />
-<link rel="stylesheet" href="css/playlists.css?v=6" />
+<link rel="stylesheet" href="css/tokens.css?v=7" />
+<link rel="stylesheet" href="css/styles.css?v=7" />
+<link rel="stylesheet" href="css/playlists.css?v=7" />
 <link rel="manifest" href="manifest.webmanifest" />
 </head>
 <body>
 
 <header class="app-bar" id="app-bar">
   <h1 class="app-bar__title">KeepGoing</h1>
-  <nav class="tabs" role="tablist" aria-label="モード切替">
-    <button class="tab is-active" type="button" role="tab" data-view="study" aria-selected="true">単語帳</button>
-    <button class="tab" type="button" role="tab" data-view="listening" aria-selected="false">リスニング</button>
-  </nav>
 </header>
 
 <main class="app-main">
 
   <!-- ===================== 単語帳ビュー (js/app.js) ===================== -->
-  <section class="view view--study is-active" id="view-study" role="tabpanel">
+  <section class="view view--study is-active" id="view-study">
     <div class="study-toolbar">
       <input type="search" class="study-search" id="study-search"
              placeholder="単語・意味・例文で検索" autocomplete="off" />
@@ -36,15 +31,7 @@
     <p class="study-empty" id="study-empty" hidden>該当する単語がありません</p>
   </section>
 
-  <!-- ===================== リスニングビュー (js/listening.js) ===================== -->
-  <section class="view view--listening" id="view-listening" role="tabpanel" hidden>
-    <div class="lsn" id="lsn-root"></div>
-  </section>
-
 </main>
-
-<!-- ===================== ミニプレイヤー (js/listening.js) ===================== -->
-<div class="mini-player" id="mini-player" hidden></div>
 
 <!-- =========================================================================
      カードのマークアップ契約。app.js はこれを clone して値を流し込む。
@@ -103,10 +90,9 @@
   </svg>
 </button>
 
-<script src="data/words.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
-<script src="js/listening.js?v=6"></script>
-<script src="js/playlists.js?v=6"></script>
+<script src="data/words.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
+<script src="js/playlists.js?v=7"></script>
 
 <script>
 /* オフライン対応（http(s) 配信時のみ。file:// では何もしない） */

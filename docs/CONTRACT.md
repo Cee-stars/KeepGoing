@@ -7,10 +7,10 @@
 
 | ファイル | 所有者 |
 |---|---|
-| `index.html`, `css/tokens.css`, `docs/CONTRACT.md`, `manifest.webmanifest` | リード（既に確定済み・変更禁止） |
+| `index.html`, `css/tokens.css`, `docs/CONTRACT.md`, `manifest.webmanifest` | リード |
 | `css/styles.css` | A：デザイナー |
 | `data/words.js`, `js/app.js` | B：プログラマー（単語帳） |
-| `css/listening.css`, `js/listening.js` | C：プログラマー（リスニング） |
+| `css/playlists.css`, `js/playlists.js` | B：プログラマー（プレイリスト） |
 
 ## 色・形
 
@@ -38,33 +38,22 @@ window.WORDS = [
 ];
 ```
 
-- 単語は **30 語ちょうど**（`id` は 1〜30）。リスニングの「1〜30」の既定レンジに対応する。
+- `id` は 1 始まりの連番。欠番を作らない（追加・削除したら振り直す）。
 - `enMark` / `jaMark` は省略可（その場合ハイライトなし）。大文字小文字は無視してマッチさせる。
 
-## `js/app.js` が公開する API（listening.js から使う）
+## `js/app.js` が公開する API
 
 ```js
 window.App = {
   words(),                 // => window.WORDS（配列そのもの）
   byId(id),                // => word | undefined
-  scrollToWord(id),        // 単語帳ビューへ切替えてその単語までスクロール＋一瞬ハイライト
-  showView("study"|"listening"),  // ビュー切替（タブの状態も更新する）
+  scrollToWord(id),        // その単語までスクロール＋一瞬ハイライト
+  showView("study"),       // ビュー切替（単語帳のみ）
   onReady(fn)              // DOM 構築後に fn() を呼ぶ
 };
 ```
 
-`App.showView()` は `.view` の `hidden` 属性と `.is-active` クラス、`.tab` の `.is-active` /
-`aria-selected` を切り替える。**タブのクリック処理は app.js が担当**（listening.js は触らない）。
-
-## `js/listening.js` が公開する API
-
-```js
-window.Listening = {
-  playFrom(id),            // その単語から再生開始
-  stop(),
-  isPlaying()
-};
-```
+`App.showView()` は `.view` の `hidden` 属性と `.is-active` クラスを切り替える。
 
 ## マークアップ契約
 

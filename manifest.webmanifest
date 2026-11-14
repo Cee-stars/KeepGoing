@@ -1,7 +1,7 @@
 {
   "name": "KeepGoing 単語帳",
   "short_name": "KeepGoing",
-  "description": "英熟語の単語帳とバックグラウンド再生リスニング",
+  "description": "英単語・チャンクの単語帳",
   "lang": "ja",
   "start_url": "./index.html",
   "scope": "./",

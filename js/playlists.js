@@ -19,13 +19,25 @@
     {
       id: 'reading',
       name: 'リーディング',
-      ids: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-            41, 42, 43, 44, 45, 46, 47]
+      ids: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            11, 12, 13, 14, 15, 16, 17]
     }
   ];
 
   /* 配布をやめたプレイリスト。保存ずみでも次に開いたときに消える。 */
   var RETIRED = ['conv'];
+
+  /* 既存の熟語 30 語を消して番号を 31-47 → 1-17 に振り直したときの付け替え。
+     保存ずみのプレイリストが空にならないよう、1 度だけ走らせる。 */
+  var FIX_RENUMBER = 'renumber-2026-11';
+
+  function renumber(ids) {
+    var out = [];
+    for (var i = 0; i < ids.length; i++) {
+      if (ids[i] >= 31 && ids[i] <= 47) out.push(ids[i] - 30);
+    }
+    return out;
+  }
 
   function seedCopies() {
     var out = [];
@@ -53,6 +65,7 @@
     return {
       lists: [{ id: FAV_ID, name: 'お気に入り', ids: [] }].concat(seedCopies()),
       seeded: seedKeys(),    // 自動追加ずみの既定リスト（消しても戻さないための印）
+      fixed: [FIX_RENUMBER], // 済ませた付け替えの印
       active: 'all'          // 'all' | 'auto:<from>-<to>' | 'pl:<id>'
     };
   }
@@ -81,6 +94,18 @@
       }
       if (out.length) S.lists = out;
     }
+    // 消した単語の番号を指したままにならないよう付け替える
+    S.fixed = [];
+    if (isArray(o.fixed)) {
+      for (var f = 0; f < o.fixed.length; f++) S.fixed.push(String(o.fixed[f]));
+    }
+    var renumbered = false;
+    if (!hasStr(S.fixed, FIX_RENUMBER)) {
+      for (var m = 0; m < S.lists.length; m++) S.lists[m].ids = renumber(S.lists[m].ids);
+      S.fixed.push(FIX_RENUMBER);
+      renumbered = true;
+    }
+
     // 配布をやめたリストを取り除く
     var kept = [];
     for (var r = 0; r < S.lists.length; r++) {
@@ -114,7 +139,7 @@
       S.active = 'all';
     }
 
-    if (added || removed) save();
+    if (added || removed || renumbered) save();
   }
 
   function save() {

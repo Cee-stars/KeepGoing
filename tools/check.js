@@ -38,18 +38,18 @@ const ok = (name, cond, note = '') => results.push({ name, pass: !!cond, note })
       first: w[0] ? { term: w[0].term, ipa: w[0].ipa, meaning: w[0].meaning } : null
     };
   });
-  ok('単語データが47件', data.count === 47, `count=${data.count}`);
-  ok('idが1..47の連番', data.idsSequential);
+  ok('単語データが17件', data.count === 17, `count=${data.count}`);
+  ok('idが1..17の連番', data.idsSequential);
   ok('必須フィールドが揃っている', data.hasFields);
   ok('ハイライト文字列が例文に実在する', data.markOk);
-  ok('1語目が写真どおり better off', data.first && data.first.term === 'better off',
+  ok('1語目が approach', data.first && data.first.term === 'approach',
      JSON.stringify(data.first));
 
   // --- 描画 ---------------------------------------------------------------
-  ok('カードが47枚描画された', await page.locator('.word-card').count() === 47);
+  ok('カードが17枚描画された', await page.locator('.word-card').count() === 17);
   ok('番号バッジに値が入っている', (await page.locator('.word-card').first().locator('.word-no').textContent()).trim() === '1');
   ok('ハイライト<mark>が存在する', await page.locator('.word-card mark').count() > 0);
-  ok('例文が描画されている', await page.locator('.example').count() >= 47);
+  ok('例文が描画されている', await page.locator('.example').count() >= 17);
 
   // --- スタイルが当たっているか（デザイナー担当分） -------------------------
   const style = await page.evaluate(() => {
@@ -77,10 +77,10 @@ const ok = (name, cond, note = '') => results.push({ name, pass: !!cond, note })
   ok('markの黄色背景が消えている', /rgba\(0, *0, *0, *0\)|transparent/.test(style.markBg || ''), style.markBg);
 
   // --- 検索 ---------------------------------------------------------------
-  await page.fill('#study-search', 'better');
+  await page.fill('#study-search', 'daylight');
   await page.waitForTimeout(350);
   const visibleAfter = await page.locator('.word-card:not([hidden])').count();
-  ok('検索で絞り込める', visibleAfter > 0 && visibleAfter < 30, `visible=${visibleAfter}`);
+  ok('検索で絞り込める', visibleAfter > 0 && visibleAfter < 17, `visible=${visibleAfter}`);
   await page.fill('#study-search', '');
   await page.waitForTimeout(350);
 

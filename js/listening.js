@@ -178,7 +178,8 @@
     gapTimer: null,
     watchdog: null,
     curUtt: null,
-    keepAlive: null
+    keepAlive: null,
+    gen: 0            // 発話の世代。cancel 後に届く古い onend/onerror を無視する
   };
 
   /* ======================================================================
@@ -268,6 +269,10 @@
         // 音量 0 だとセッションを切る実装があるので極小の値にする
         silentAudio.volume = 0.001;
         silentAudio.src = silentWavDataUri(1);
+        silentAudio.className = 'lsn-silent';
+        // DOM 外だと再生を続けない実装があるので自分の描画先に入れておく
+        var host = document.getElementById('lsn-root') || document.body;
+        if (host) host.appendChild(silentAudio);
       }
       var p = silentAudio.play();
       if (p && typeof p.catch === 'function') p.catch(noop);
@@ -426,11 +431,13 @@
   }
 
   function loadTrack(idx) {
+    P.gen++;
     P.trackIdx = idx;
     P.stepIdx = 0;
     var w = wordById(currentId());
     P.steps = w ? buildSteps(w) : [];
     markSpeaking(currentId());
+    markCurrentRow();
     updateMediaSession();
     renderPlayer();
     renderMini();
@@ -442,8 +449,10 @@
     if (!step) { trackFinished(); return; }
     if (step.kind === 'gap') {
       if (step.ms <= 0) { P.stepIdx++; runStep(); return; }
+      var gen = P.gen;
       P.gapTimer = window.setTimeout(function () {
         P.gapTimer = null;
+        if (gen !== P.gen || !P.active || P.paused) return;
         P.stepIdx++;
         runStep();
       }, step.ms);
@@ -452,15 +461,16 @@
     speakStep(step);
   }
 
-  function nextStepSoon() {
+  function nextStepSoon(gen) {
     window.setTimeout(function () {
-      if (!P.active || P.paused) return;
+      if (gen !== P.gen || !P.active || P.paused) return;
       P.stepIdx++;
       runStep();
     }, 0);
   }
 
-  function failStep() {
+  function failStep(gen) {
+    if (gen !== P.gen) return;
     P.errorStreak++;
     if (P.errorStreak >= 6) {
       // 無限ループを避けるため、連続で失敗したら停止して理由を出す
@@ -468,14 +478,15 @@
       stop();
       return;
     }
-    nextStepSoon();
+    nextStepSoon(gen);
   }
 
   function speakStep(step) {
-    if (!HAS_TTS) { failStep(); return; }
+    var gen = P.gen;
+    if (!HAS_TTS) { failStep(gen); return; }
     var u;
     try { u = new window.SpeechSynthesisUtterance(step.text); }
-    catch (e) { failStep(); return; }
+    catch (e) { failStep(gen); return; }
 
     u.lang = step.lang === 'ja' ? 'ja-JP' : 'en-US';
     var v = step.lang === 'ja' ? voiceJa : voiceEn;
@@ -487,34 +498,37 @@
     var done = false;
     P.curUtt = u;
 
-    u.onstart = function () { clearWatchdog(); };
+    u.onstart = function () {
+      if (gen !== P.gen) return;
+      clearWatchdog();
+    };
     u.onend = function () {
-      if (done) return;
+      if (done || gen !== P.gen) return;
       done = true;
       clearWatchdog();
       P.errorStreak = 0;
-      nextStepSoon();
+      nextStepSoon(gen);
     };
     u.onerror = function () {
-      if (done) return;
+      if (done || gen !== P.gen) return;
       done = true;
       clearWatchdog();
-      failStep();
+      failStep(gen);
     };
 
     // 発話が始まらない環境（音声エンジン無し等）で止まらないための見張り
     clearWatchdog();
     P.watchdog = window.setTimeout(function () {
       P.watchdog = null;
-      if (done) return;
+      if (done || gen !== P.gen) return;
       done = true;
       try { synth.cancel(); } catch (e) {}
-      failStep();
+      failStep(gen);
     }, 3000);
 
     try { synth.speak(u); }
     catch (e) {
-      if (!done) { done = true; clearWatchdog(); failStep(); }
+      if (!done) { done = true; clearWatchdog(); failStep(gen); }
     }
   }
 
@@ -533,7 +547,12 @@
   /* ======================================================================
      11. 操作（再生／一時停止／前後／シーク／停止）
      ====================================================================== */
+  /* cancel() すると直前の発話の onend / onerror が遅れて飛んでくる実装があるため、
+     世代を進めて古いコールバックを無効化する（キューの二重進行を防ぐ）。 */
   function cancelSpeech() {
+    P.gen++;
+    clearWatchdog();
+    P.curUtt = null;
     if (!HAS_TTS) return;
     try { synth.cancel(); } catch (e) {}
   }
@@ -572,7 +591,8 @@
     P.paused = true;
     clearTimers();
     try { if (HAS_TTS) synth.pause(); } catch (e) {}
-    // pause() が効かない実装のために cancel も用意（再開時は同じステップから読み直す）
+    // pause() が効かない端末（Android Chrome 等）では発話が最後まで流れるが、
+    // 次のステップへは進まない。再開時は同じステップから読み直す（resume 参照）。
     updateMediaSession();
     renderAll();
   }
@@ -641,6 +661,7 @@
     stopKeepAlive();
     stopSilentLoop();
     markSpeaking(0);
+    markCurrentRow();
     updateMediaSession();
     renderAll();
   }
@@ -722,7 +743,7 @@
     head.appendChild(ui.no);
     var meta = el('div', 'lsn-meta');
     ui.ipa = el('p', 'lsn-ipa', '');
-    ui.term = el('h2', 'lsn-term', '—');
+    ui.term = el('h2', 'lsn-term', '');
     ui.meaning = el('p', 'lsn-meaning', '再生する範囲を選んで ▶ を押してください');
     meta.appendChild(ui.ipa);
     meta.appendChild(ui.term);
@@ -801,7 +822,12 @@
     ui.modeRange = chip('範囲で選ぶ', 'lsn-chip--seg');
     ui.modePick = chip('個別に選ぶ', 'lsn-chip--seg');
     ui.modeRange.addEventListener('click', function () { S.mode = 'range'; afterSelectionChange(); });
-    ui.modePick.addEventListener('click', function () { S.mode = 'pick'; afterSelectionChange(); });
+    ui.modePick.addEventListener('click', function () {
+      // 空のまま切り替えて 0 語になるのを避け、いまの範囲を引き継ぐ
+      if (S.mode !== 'pick' && !S.picked.length) S.picked = idsInRange(S.start, S.end);
+      S.mode = 'pick';
+      afterSelectionChange();
+    });
     modes.appendChild(ui.modeRange);
     modes.appendChild(ui.modePick);
     body.appendChild(modes);
@@ -856,9 +882,7 @@
       afterSelectionChange();
     });
     bFromRange.addEventListener('click', function () {
-      var a = Math.min(S.start, S.end), b = Math.max(S.start, S.end);
-      S.picked = words().map(function (w) { return toInt(w.id, 0); })
-                        .filter(function (id) { return id >= a && id <= b; });
+      S.picked = idsInRange(S.start, S.end);
       S.mode = 'pick';
       afterSelectionChange();
     });
@@ -1083,15 +1107,28 @@
     defs.push(['全部', lo, hi]);
     defs.forEach(function (d) {
       var c = chip(d[0]);
-      if (S.mode === 'range' && S.start === d[1] && S.end === d[2]) c.classList.add('is-on');
+      if (isPresetOn(d[1], d[2])) c.classList.add('is-on');
       c.addEventListener('click', function () {
-        S.mode = 'range';
         S.start = d[1];
         S.end = d[2];
+        // 個別選択モードのときはチェック内容をその範囲に置き換える（モードは変えない）
+        if (S.mode === 'pick') S.picked = idsInRange(d[1], d[2]);
         afterSelectionChange();
       });
       ui.presets.appendChild(c);
     });
+  }
+
+  function idsInRange(a, b) {
+    var lo = Math.min(a, b), hi = Math.max(a, b);
+    return words().map(function (w) { return toInt(w.id, 0); })
+                  .filter(function (id) { return id >= lo && id <= hi; });
+  }
+
+  function isPresetOn(a, b) {
+    if (S.mode === 'range') return S.start === a && S.end === b;
+    var want = idsInRange(a, b).join(',');
+    return want !== '' && want === S.picked.slice().sort(function (x, y) { return x - y; }).join(',');
   }
 
   /* 個別選択リスト */
@@ -1104,6 +1141,7 @@
     ws.forEach(function (w) {
       var id = toInt(w.id, 0);
       var row = el('label', 'lsn-row');
+      row.setAttribute('data-id', String(id));
       var box = document.createElement('input');
       box.type = 'checkbox';
       box.className = 'lsn-row__box';
@@ -1134,15 +1172,29 @@
       row.appendChild(jump);
       ui.pickList.appendChild(row);
     });
+    markCurrentRow();
+  }
+
+  /* 個別選択リストの「いま再生中の行」を示す */
+  function markCurrentRow() {
+    if (!ui.pickList) return;
+    var on = ui.pickList.querySelectorAll('.lsn-row.is-current');
+    for (var i = 0; i < on.length; i++) on[i].classList.remove('is-current');
+    if (!P.active) return;
+    var row = ui.pickList.querySelector('.lsn-row[data-id="' + currentId() + '"]');
+    if (row) row.classList.add('is-current');
   }
 
   /* 選択 UI 全体（モード・入力値・プリセット・リスト） */
   function renderSelectionUI() {
     if (!built) return;
+    var hasWords = words().length > 0;
     var lo = minId(), hi = maxId();
-    S.start = clampNum(S.start, lo, hi);
-    S.end = clampNum(S.end, lo, hi);
-    if (S.start > S.end) { var t = S.start; S.start = S.end; S.end = t; }
+    if (hasWords) {
+      S.start = clampNum(S.start, lo, hi);
+      S.end = clampNum(S.end, lo, hi);
+      if (S.start > S.end) { var t = S.start; S.start = S.end; S.end = t; }
+    }
 
     ui.inStart.min = ui.inEnd.min = String(lo);
     ui.inStart.max = ui.inEnd.max = String(hi);
@@ -1174,9 +1226,10 @@
 
     ui.no.textContent = w ? String(w.id) : '–';
     ui.ipa.textContent = w && w.ipa ? w.ipa : '';
-    ui.term.textContent = w ? (w.term || '') : '—';
+    ui.term.textContent = w ? (w.term || '') : '';
     ui.meaning.textContent = w ? (w.meaning || '')
                                : '聞く範囲を選んで ▶ を押してください';
+    ui.meaning.classList.toggle('lsn-meaning--empty', !w);
 
     ui.progText.textContent = pos + ' / ' + total;
     var pct = total > 0 ? (pos / total) * 100 : 0;
@@ -1190,9 +1243,7 @@
     ui.btnPlay.disabled = !HAS_TTS;
     ui.btnShow.disabled = !w;
 
-    var state = P.active ? (P.paused ? '一時停止中' : '再生中') : '停止中';
     ui.voiceBadge.textContent = S.repeat + ' 回 / ' + S.gap.toFixed(1) + '秒';
-    ui.term.setAttribute('data-state', state);
   }
 
   function renderMini() {
@@ -1242,7 +1293,7 @@
       S.start = clampNum(S.start, lo, hi);
       S.end = clampNum(S.end, lo, hi);
       ui.countBadge.textContent = selectedIds().length + ' 語';
-      renderPresets();
+      renderPresets();     // プリセットの点灯だけ更新（リストは作り直さない）
     } else {
       renderSelectionUI();
     }

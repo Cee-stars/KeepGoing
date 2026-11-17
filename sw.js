@@ -4,9 +4,9 @@
    取れなかったときだけキャッシュを返す。
    こうしないとデプロイしても古い画面が出続ける。
    ============================================================= */
-const CACHE = 'keepgoing-v8';
+const CACHE = 'keepgoing-v9';
 // index.html と同じ ?v= を付ける。付けないと別URL扱いで二重に持つことになる。
-const V = '?v=8';
+const V = '?v=9';
 const ASSETS = [
   './', './index.html',
   './css/tokens.css' + V, './css/styles.css' + V, './css/playlists.css' + V,

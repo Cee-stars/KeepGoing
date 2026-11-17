@@ -1,10 +1,10 @@
 /* =============================================================
-   KeepGoing — 単語データ（30語：2つの文から 単語18 + チャンク12）
+   KeepGoing — 単語データ（26語：2つの文から切り出した単語とチャンク）
    形式は docs/CONTRACT.md の「データ形式」に厳密に従う。
    enMark / jaMark は en / ja に実際に含まれる文字列のみを書く。
    ============================================================= */
 window.WORDS = [
-  /* ---- 単語（As winter approaches… の文より）------------------------- */
+  /* ---- 単語（As winter approaches… の文より）------------------------ */
   {
     id: 1,
     term: "approach",
@@ -205,7 +205,8 @@ window.WORDS = [
       }
     ]
   },
-  /* ---- チャンク（意味のかたまり）-------------------------------------- */
+
+  /* ---- チャンク（As winter approaches… の文より）--------------------- */
   {
     id: 11,
     term: "as winter approaches",
@@ -347,29 +348,9 @@ window.WORDS = [
     ]
   },
 
-  /* ---- 単語（The millions of people typically have… の文より）--------- */
+  /* ---- 単語（The millions of people typically have… の文より）-------- */
   {
     id: 18,
-    term: "million",
-    ipa: "/ˈmɪljən/",
-    meaning: "100万（millions of で「何百万もの」）",
-    examples: [
-      {
-        en: "This city has two million people.",
-        ja: "この街には200万人が住んでいる。",
-        enMark: ["million"],
-        jaMark: ["200万"]
-      },
-      {
-        en: "Millions of people watched the game on TV.",
-        ja: "何百万もの人がテレビでその試合を見た。",
-        enMark: ["Millions of"],
-        jaMark: ["何百万もの"]
-      }
-    ]
-  },
-  {
-    id: 19,
     term: "typically",
     ipa: "/ˈtɪpɪkli/",
     meaning: "たいてい、普通は",
@@ -389,7 +370,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 20,
+    id: 19,
     term: "episode",
     ipa: "/ˈɛpɪsoʊd/",
     meaning: "（症状が続く）期間、ひと続きの話",
@@ -409,7 +390,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 21,
+    id: 20,
     term: "begin",
     ipa: "/bɪˈɡɪn/",
     meaning: "始まる、始める",
@@ -429,27 +410,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 22,
-    term: "fall",
-    ipa: "/ˈfɔːl/",
-    meaning: "秋（米語。英では autumn）",
-    examples: [
-      {
-        en: "The leaves turn red in the fall.",
-        ja: "秋には葉が赤くなる。",
-        enMark: ["fall"],
-        jaMark: ["秋"]
-      },
-      {
-        en: "We moved to this city last fall.",
-        ja: "私たちは去年の秋にこの街へ引っ越した。",
-        enMark: ["fall"],
-        jaMark: ["秋"]
-      }
-    ]
-  },
-  {
-    id: 23,
+    id: 21,
     term: "ease",
     ipa: "/ˈiːz/",
     meaning: "和らぐ、楽になる",
@@ -468,50 +429,10 @@ window.WORDS = [
       }
     ]
   },
-  {
-    id: 24,
-    term: "spring",
-    ipa: "/ˈsprɪŋ/",
-    meaning: "春",
-    examples: [
-      {
-        en: "Many flowers open in the spring.",
-        ja: "春にはたくさんの花が咲く。",
-        enMark: ["spring"],
-        jaMark: ["春"]
-      },
-      {
-        en: "We take a trip every spring.",
-        ja: "私たちは毎年春に旅行する。",
-        enMark: ["spring"],
-        jaMark: ["春"]
-      }
-    ]
-  },
-  {
-    id: 25,
-    term: "summer",
-    ipa: "/ˈsʌmər/",
-    meaning: "夏",
-    examples: [
-      {
-        en: "I swim in the sea every summer.",
-        ja: "私は毎年夏に海で泳ぐ。",
-        enMark: ["summer"],
-        jaMark: ["夏"]
-      },
-      {
-        en: "The days are long in summer.",
-        ja: "夏は日が長い。",
-        enMark: ["summer"],
-        jaMark: ["夏"]
-      }
-    ]
-  },
 
-  /* ---- チャンク（The millions of people typically have… の文より）----- */
+  /* ---- チャンク（The millions of people typically have… の文より）---- */
   {
-    id: 26,
+    id: 22,
     term: "the millions of people",
     ipa: "/ðə ˈmɪljənz əv ˈpiːpəl/",
     meaning: "何百万もの人々（S）",
@@ -531,7 +452,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 27,
+    id: 23,
     term: "typically have",
     ipa: "/ˈtɪpɪkli ˈhæv/",
     meaning: "たいてい〜を経験する（V）",
@@ -551,7 +472,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 28,
+    id: 24,
     term: "episodes of depression",
     ipa: "/ˈɛpɪsoʊdz əv dɪˈprɛʃən/",
     meaning: "うつの発症期間（O）",
@@ -571,7 +492,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 29,
+    id: 25,
     term: "that begin in the fall",
     ipa: "/ðət bɪˈɡɪn ɪn ðə ˈfɔːl/",
     meaning: "秋に始まる〜（関係代名詞節）",
@@ -591,7 +512,7 @@ window.WORDS = [
     ]
   },
   {
-    id: 30,
+    id: 26,
     term: "ease in the spring or summer",
     ipa: "/ˈiːz ɪn ðə ˈsprɪŋ ɔːr ˈsʌmər/",
     meaning: "春か夏に和らぐ（and で並列）",

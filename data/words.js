@@ -1,5 +1,5 @@
 /* =============================================================
-   KeepGoing — 単語データ（17語：単語10 + チャンク7）
+   KeepGoing — 単語データ（30語：2つの文から 単語18 + チャンク12）
    形式は docs/CONTRACT.md の「データ形式」に厳密に従う。
    enMark / jaMark は en / ja に実際に含まれる文字列のみを書く。
    ============================================================= */
@@ -343,6 +343,270 @@ window.WORDS = [
         ja: "試合のあと、選手たちは体と脳が疲れていた。",
         enMark: ["in their bodies and brains"],
         jaMark: ["体と脳"]
+      }
+    ]
+  },
+
+  /* ---- 単語（The millions of people typically have… の文より）--------- */
+  {
+    id: 18,
+    term: "million",
+    ipa: "/ˈmɪljən/",
+    meaning: "100万（millions of で「何百万もの」）",
+    examples: [
+      {
+        en: "This city has two million people.",
+        ja: "この街には200万人が住んでいる。",
+        enMark: ["million"],
+        jaMark: ["200万"]
+      },
+      {
+        en: "Millions of people watched the game on TV.",
+        ja: "何百万もの人がテレビでその試合を見た。",
+        enMark: ["Millions of"],
+        jaMark: ["何百万もの"]
+      }
+    ]
+  },
+  {
+    id: 19,
+    term: "typically",
+    ipa: "/ˈtɪpɪkli/",
+    meaning: "たいてい、普通は",
+    examples: [
+      {
+        en: "I typically get up at seven.",
+        ja: "私はたいてい7時に起きる。",
+        enMark: ["typically"],
+        jaMark: ["たいてい"]
+      },
+      {
+        en: "Summer here is typically hot and wet.",
+        ja: "ここの夏はたいてい暑くて雨が多い。",
+        enMark: ["typically"],
+        jaMark: ["たいてい"]
+      }
+    ]
+  },
+  {
+    id: 20,
+    term: "episode",
+    ipa: "/ˈɛpɪsoʊd/",
+    meaning: "（症状が続く）期間、ひと続きの話",
+    examples: [
+      {
+        en: "He had an episode of back pain last week.",
+        ja: "彼は先週、背中が痛む時期があった。",
+        enMark: ["episode"],
+        jaMark: ["時期"]
+      },
+      {
+        en: "I watched the last episode of the show.",
+        ja: "その番組の最終話を見た。",
+        enMark: ["episode"],
+        jaMark: ["話"]
+      }
+    ]
+  },
+  {
+    id: 21,
+    term: "begin",
+    ipa: "/bɪˈɡɪn/",
+    meaning: "始まる、始める",
+    examples: [
+      {
+        en: "The movie begins at eight.",
+        ja: "映画は8時に始まる。",
+        enMark: ["begins"],
+        jaMark: ["始まる"]
+      },
+      {
+        en: "School begins in April in Japan.",
+        ja: "日本では学校は4月に始まる。",
+        enMark: ["begins"],
+        jaMark: ["始まる"]
+      }
+    ]
+  },
+  {
+    id: 22,
+    term: "fall",
+    ipa: "/ˈfɔːl/",
+    meaning: "秋（米語。英では autumn）",
+    examples: [
+      {
+        en: "The leaves turn red in the fall.",
+        ja: "秋には葉が赤くなる。",
+        enMark: ["fall"],
+        jaMark: ["秋"]
+      },
+      {
+        en: "We moved to this city last fall.",
+        ja: "私たちは去年の秋にこの街へ引っ越した。",
+        enMark: ["fall"],
+        jaMark: ["秋"]
+      }
+    ]
+  },
+  {
+    id: 23,
+    term: "ease",
+    ipa: "/ˈiːz/",
+    meaning: "和らぐ、楽になる",
+    examples: [
+      {
+        en: "The pain eased after I took the medicine.",
+        ja: "薬を飲んだあと、痛みが和らいだ。",
+        enMark: ["eased"],
+        jaMark: ["和らいだ"]
+      },
+      {
+        en: "The rain eased in the afternoon.",
+        ja: "午後になって雨が弱まった。",
+        enMark: ["eased"],
+        jaMark: ["弱まった"]
+      }
+    ]
+  },
+  {
+    id: 24,
+    term: "spring",
+    ipa: "/ˈsprɪŋ/",
+    meaning: "春",
+    examples: [
+      {
+        en: "Many flowers open in the spring.",
+        ja: "春にはたくさんの花が咲く。",
+        enMark: ["spring"],
+        jaMark: ["春"]
+      },
+      {
+        en: "We take a trip every spring.",
+        ja: "私たちは毎年春に旅行する。",
+        enMark: ["spring"],
+        jaMark: ["春"]
+      }
+    ]
+  },
+  {
+    id: 25,
+    term: "summer",
+    ipa: "/ˈsʌmər/",
+    meaning: "夏",
+    examples: [
+      {
+        en: "I swim in the sea every summer.",
+        ja: "私は毎年夏に海で泳ぐ。",
+        enMark: ["summer"],
+        jaMark: ["夏"]
+      },
+      {
+        en: "The days are long in summer.",
+        ja: "夏は日が長い。",
+        enMark: ["summer"],
+        jaMark: ["夏"]
+      }
+    ]
+  },
+
+  /* ---- チャンク（The millions of people typically have… の文より）----- */
+  {
+    id: 26,
+    term: "the millions of people",
+    ipa: "/ðə ˈmɪljənz əv ˈpiːpəl/",
+    meaning: "何百万もの人々（S）",
+    examples: [
+      {
+        en: "The millions of people in this city use the train every day.",
+        ja: "この街の何百万もの人々は毎日電車を使う。",
+        enMark: ["The millions of people"],
+        jaMark: ["何百万もの人々"]
+      },
+      {
+        en: "The millions of people at home watched the news.",
+        ja: "家にいる何百万もの人々がそのニュースを見た。",
+        enMark: ["The millions of people"],
+        jaMark: ["何百万もの人々"]
+      }
+    ]
+  },
+  {
+    id: 27,
+    term: "typically have",
+    ipa: "/ˈtɪpɪkli ˈhæv/",
+    meaning: "たいてい〜を経験する（V）",
+    examples: [
+      {
+        en: "People typically have three meals a day.",
+        ja: "人はたいてい1日に3回食事をする。",
+        enMark: ["typically have"],
+        jaMark: ["たいてい"]
+      },
+      {
+        en: "Students typically have a lot of homework before a test.",
+        ja: "学生はテスト前にたいてい宿題がたくさんある。",
+        enMark: ["typically have"],
+        jaMark: ["たいてい"]
+      }
+    ]
+  },
+  {
+    id: 28,
+    term: "episodes of depression",
+    ipa: "/ˈɛpɪsoʊdz əv dɪˈprɛʃən/",
+    meaning: "うつの発症期間（O）",
+    examples: [
+      {
+        en: "Some people have episodes of depression every winter.",
+        ja: "冬のたびにうつの発症期間がある人もいる。",
+        enMark: ["episodes of depression"],
+        jaMark: ["うつの発症期間"]
+      },
+      {
+        en: "Her doctor asked about her episodes of depression.",
+        ja: "医師は彼女のうつの発症期間について尋ねた。",
+        enMark: ["episodes of depression"],
+        jaMark: ["うつの発症期間"]
+      }
+    ]
+  },
+  {
+    id: 29,
+    term: "that begin in the fall",
+    ipa: "/ðət bɪˈɡɪn ɪn ðə ˈfɔːl/",
+    meaning: "秋に始まる〜（関係代名詞節）",
+    examples: [
+      {
+        en: "He has headaches that begin in the fall.",
+        ja: "彼には秋に始まる頭痛がある。",
+        enMark: ["that begin in the fall"],
+        jaMark: ["秋に始まる"]
+      },
+      {
+        en: "There are classes that begin in the fall.",
+        ja: "秋に始まる授業もある。",
+        enMark: ["that begin in the fall"],
+        jaMark: ["秋に始まる"]
+      }
+    ]
+  },
+  {
+    id: 30,
+    term: "ease in the spring or summer",
+    ipa: "/ˈiːz ɪn ðə ˈsprɪŋ ɔːr ˈsʌmər/",
+    meaning: "春か夏に和らぐ（and で並列）",
+    examples: [
+      {
+        en: "These problems ease in the spring or summer.",
+        ja: "これらの問題は春か夏に和らぐ。",
+        enMark: ["ease in the spring or summer"],
+        jaMark: ["春か夏に和らぐ"]
+      },
+      {
+        en: "Her sad feelings ease in the spring or summer.",
+        ja: "彼女の沈んだ気持ちは春か夏に和らぐ。",
+        enMark: ["ease in the spring or summer"],
+        jaMark: ["春か夏に和らぐ"]
       }
     ]
   }

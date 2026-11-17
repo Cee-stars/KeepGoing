@@ -1,5 +1,5 @@
 /* =============================================================
-   KeepGoing — 単語データ（26語：2つの文から切り出した単語とチャンク）
+   KeepGoing — 単語データ（30語：2つの文の単語とチャンク＋構文）
    形式は docs/CONTRACT.md の「データ形式」に厳密に従う。
    enMark / jaMark は en / ja に実際に含まれる文字列のみを書く。
    ============================================================= */
@@ -528,6 +528,88 @@ window.WORDS = [
         ja: "彼女の沈んだ気持ちは春か夏に和らぐ。",
         enMark: ["ease in the spring or summer"],
         jaMark: ["春か夏に和らぐ"]
+      }
+    ]
+  },
+
+  /* ---- 構文：N estimated to do（〜と推定される…）--------------------- */
+  {
+    id: 27,
+    term: "estimate",
+    ipa: "/ˈɛstɪmeɪt/",
+    meaning: "〜と見積もる、推定する",
+    examples: [
+      {
+        en: "Police estimated that 2,000 people came to the event.",
+        ja: "警察は2,000人がそのイベントに来たと推定した。",
+        enMark: ["estimated"],
+        jaMark: ["推定した"]
+      },
+      {
+        en: "We estimate the trip will take two hours.",
+        ja: "その移動には2時間かかると見積もっている。",
+        enMark: ["estimate"],
+        jaMark: ["見積もっている"]
+      }
+    ]
+  },
+  {
+    id: 28,
+    term: "estimated to have",
+    ipa: "/ˈɛstɪmeɪtɪd tə ˈhæv/",
+    meaning: "〜を持つと推定される（後置修飾）",
+    examples: [
+      {
+        en: "Students estimated to have eye problems got bigger textbooks.",
+        ja: "目に問題があると推定される生徒は、大きめの教科書をもらった。",
+        enMark: ["estimated to have"],
+        jaMark: ["推定される"]
+      },
+      {
+        en: "Shops estimated to have more than 50 workers must follow the new rule.",
+        ja: "従業員が50人を超えると推定される店は、新しいルールに従わなければならない。",
+        enMark: ["estimated to have"],
+        jaMark: ["推定される"]
+      }
+    ]
+  },
+  {
+    id: 29,
+    term: "estimated to be",
+    ipa: "/ˈɛstɪmeɪtɪd tə ˈbi/",
+    meaning: "〜だと推定される（後置修飾）",
+    examples: [
+      {
+        en: "The tree estimated to be 500 years old is in the park.",
+        ja: "樹齢500年と推定されるその木は公園にある。",
+        enMark: ["estimated to be"],
+        jaMark: ["推定される"]
+      },
+      {
+        en: "The painting estimated to be 200 years old is very famous.",
+        ja: "200年前のものと推定されるその絵はとても有名だ。",
+        enMark: ["estimated to be"],
+        jaMark: ["推定される"]
+      }
+    ]
+  },
+  {
+    id: 30,
+    term: "estimated to cost",
+    ipa: "/ˈɛstɪmeɪtɪd tə ˈkɔːst/",
+    meaning: "〜の費用がかかると推定される（後置修飾）",
+    examples: [
+      {
+        en: "The new bridge estimated to cost 3 billion yen will open next year.",
+        ja: "費用が30億円と推定される新しい橋は、来年開通する。",
+        enMark: ["estimated to cost"],
+        jaMark: ["推定される"]
+      },
+      {
+        en: "A trip estimated to cost 100,000 yen is too expensive for me.",
+        ja: "10万円かかると推定される旅行は、私には高すぎる。",
+        enMark: ["estimated to cost"],
+        jaMark: ["推定される"]
       }
     ]
   }

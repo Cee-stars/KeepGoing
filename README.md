@@ -22,6 +22,36 @@
 - 選んでいるプレイリストと中身はブラウザに保存され、次に開いたときに復元されます。
 - 長い一覧では、右下に **先頭へ戻る** ボタンが出ます。
 
+## 単語データはどこにあるか
+
+単語は**すべてこのリポジトリに保存**されています。端末の中だけに保存されるものはありません
+（ブラウザに保存されるのはプレイリストの中身だけです）。
+
+**別の会話の Claude に単語を読ませたいときは、次のどれかを渡してください。**
+
+| 用途 | 場所 |
+|---|---|
+| 人も AI も読みやすい一覧（おすすめ） | [`docs/WORDS.md`](docs/WORDS.md) |
+| 機械が読む用 | [`data/words.json`](data/words.json) |
+| アプリが読む元データ | [`data/words.js`](data/words.js) |
+
+リポジトリを開けない会話には、公開 URL をそのまま渡せば読めます。
+
+```
+https://cee-stars.github.io/KeepGoing/data/words.json
+```
+
+```
+https://raw.githubusercontent.com/Cee-stars/KeepGoing/main/docs/WORDS.md
+```
+
+`words.json` と `WORDS.md` は `data/words.js` からの自動生成です。**`words.js` を編集したら
+必ず次を実行してください。**（忘れると `node tools/check.js` が失敗します）
+
+```bash
+node tools/export-words.js
+```
+
 ## 単語を追加する
 
 `data/words.js` を編集するだけです。
@@ -53,7 +83,9 @@
 | `index.html` | 画面の骨組みとカードの `<template>` |
 | `css/tokens.css` | 配色トークン（写真の色はここに集約） |
 | `css/styles.css` | 単語帳の見た目 |
-| `data/words.js` | 単語データ |
+| `data/words.js` | 単語データ（元データ。ここを編集する） |
+| `data/words.json` / `docs/WORDS.md` | 単語データの書き出し（自動生成。他のセッションに渡す用） |
+| `tools/export-words.js` | 上の 2 つを作り直す |
 | `js/app.js` | 一覧描画・検索・タブ・`window.App` |
 | `js/playlists.js` / `css/playlists.css` | プレイリスト・先頭へ戻る・`window.Playlists` |
 | `sw.js` / `manifest.webmanifest` | オフライン対応とホーム画面追加 |

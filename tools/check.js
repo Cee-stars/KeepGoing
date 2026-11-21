@@ -5,12 +5,56 @@
  */
 const { chromium } = require('playwright');
 const path = require('path');
+const fs = require('fs');
 
-const URL = 'file://' + path.resolve(__dirname, '..', 'index.html');
+const ROOT = path.resolve(__dirname, '..');
+const URL = 'file://' + path.join(ROOT, 'index.html');
 const results = [];
 const ok = (name, cond, note = '') => results.push({ name, pass: !!cond, note });
 
+/* 書き出したファイルが words.js と同じ中身かを見る。
+   ずれていたら node tools/export-words.js を忘れている。 */
+function checkExports() {
+  let src = [];
+  try {
+    const g = {};
+    new Function('window', fs.readFileSync(path.join(ROOT, 'data', 'words.js'), 'utf8'))(g);
+    src = g.WORDS || [];
+  } catch (e) {
+    ok('data/words.js を読める', false, String(e));
+    return;
+  }
+
+  let json = null;
+  try {
+    json = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'words.json'), 'utf8'));
+  } catch (e) {
+    ok('data/words.json がある', false, String(e));
+  }
+  if (json) {
+    ok('words.json の件数が一致', json.count === src.length && (json.words || []).length === src.length,
+       `json=${json.count} js=${src.length}`);
+    const same = JSON.stringify(json.words) === JSON.stringify(src);
+    ok('words.json の中身が一致', same, same ? '' : 'ずれています → node tools/export-words.js');
+  }
+
+  let md = '';
+  try {
+    md = fs.readFileSync(path.join(ROOT, 'docs', 'WORDS.md'), 'utf8');
+  } catch (e) {
+    ok('docs/WORDS.md がある', false, String(e));
+  }
+  if (md) {
+    const missing = src.filter(w => md.indexOf('### ' + w.id + '. ' + w.term) === -1);
+    ok('WORDS.md に全単語が載っている', missing.length === 0,
+       missing.length ? '欠け: ' + missing.map(w => w.term).join(', ') : '');
+    ok('WORDS.md の件数表記が一致', md.indexOf('（' + src.length + '語）') !== -1);
+  }
+}
+
 (async () => {
+  checkExports();
+
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 

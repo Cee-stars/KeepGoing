@@ -35,15 +35,19 @@
 | 機械が読む用 | [`data/words.json`](data/words.json) |
 | アプリが読む元データ | [`data/words.js`](data/words.js) |
 
-リポジトリを開けない会話には、公開 URL をそのまま渡せば読めます。
-
-```
-https://cee-stars.github.io/KeepGoing/data/words.json
-```
+リポジトリを開けない会話には、URL をそのまま渡せば読めます。**この 2 つが確実です**
+（push した瞬間に反映されるので、サイトの再デプロイを待つ必要もありません）。
 
 ```
 https://raw.githubusercontent.com/Cee-stars/KeepGoing/main/docs/WORDS.md
 ```
+
+```
+https://raw.githubusercontent.com/Cee-stars/KeepGoing/main/data/words.json
+```
+
+公開サイト側の `https://cee-stars.github.io/KeepGoing/data/words.json` でも読めますが、
+デプロイ完了まで数分遅れます。
 
 `words.json` と `WORDS.md` は `data/words.js` からの自動生成です。**`words.js` を編集したら
 必ず次を実行してください。**（忘れると `node tools/check.js` が失敗します）
